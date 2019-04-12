@@ -1,0 +1,8 @@
+.idea
+__pycache__
+emnist-balanced.mat
+emnist-byclass.mat
+emnist-bymerge.mat
+emnist-digits.mat
+emnist-letters.mat
+emnist-mnist.mat
