@@ -9,8 +9,11 @@ Environment:
 	- scipy      --> pip install scipy
 	- matplotlib --> pip install matplotlib
 	- keras      --> pip install keras
-	- tensorflow --> pip install tensorflow-gpu
+	- tensorflow --> pip install tensorflow
 	- opencv     --> pip install opencv-python
+
+*pip might default to python 2, in that case, use pip3
+*install tensorflow-gpu for processing on the gpu
 
 Dataset: https://drive.google.com/file/d/1EcyPyVki-OxrT3BCZ9U-NZCRAgihCapV/view?usp=sharing
 
