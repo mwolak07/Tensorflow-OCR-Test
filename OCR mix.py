@@ -293,7 +293,7 @@ callbacks_list = [
 ]
 
 # Fit model on training data
-history = model.fit(x_train_combined, y_train_combined,
+history = model.fit(x_train_combined[0:10], y_train_combined[0:10],
                     batch_size=32, epochs=10, verbose=1, callbacks=callbacks_list)
 
 # Print history object's keys
