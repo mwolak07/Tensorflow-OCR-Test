@@ -121,12 +121,12 @@ model.add(Dropout(.5))
 model.add(Dense(37, activation="softmax"))
 
 # Load test images
-image1 = cv2.imread('1B.png', flags=cv2.IMREAD_GRAYSCALE)
-image2 = cv2.imread('2N.png', flags=cv2.IMREAD_GRAYSCALE)
-image3 = cv2.imread('3B.png', flags=cv2.IMREAD_GRAYSCALE)
-image4 = cv2.imread('4B.png', flags=cv2.IMREAD_GRAYSCALE)
-image5 = cv2.imread('0B.png', flags=cv2.IMREAD_GRAYSCALE)
-image6 = cv2.imread('perfect.png', flags=cv2.IMREAD_GRAYSCALE)
+image1 = cv2.imread("images/0A.png", flags=cv2.IMREAD_GRAYSCALE)
+image2 = cv2.imread("images/1A.png", flags=cv2.IMREAD_GRAYSCALE)
+image3 = cv2.imread("images/2A.png", flags=cv2.IMREAD_GRAYSCALE)
+image4 = cv2.imread("images/3A.png", flags=cv2.IMREAD_GRAYSCALE)
+image5 = cv2.imread("images/4A.png", flags=cv2.IMREAD_GRAYSCALE)
+image6 = cv2.imread("images/blank.png", flags=cv2.IMREAD_GRAYSCALE)
 test_images = [image1, image2, image3, image4, image5]
 test_images = preprocess_images(test_images)
 print(test_images.shape)

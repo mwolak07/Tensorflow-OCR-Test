@@ -7,6 +7,7 @@ from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.datasets import mnist
 from keras.callbacks import LambdaCallback
+import cv2
 
 
 def inflate_answers(answers):   # Increases emnist y-set values by 9 to accomadate mnist set
@@ -35,10 +36,10 @@ def make_it_right(letters):   # Rotates 90 degrees and flips vertically, to orie
 
 
 def multiply_mnist(images, number_of_times):   # Adds set number of transformation sets
-    output = mnist_transformer(images)
+    output = images
     if number_of_times - 1 != 0:
         for i in range(0, (number_of_times - 1)):
-            output = np.concatenate((output, mnist_transformer(images)))
+            output = np.concatenate((output, images))
     return output
 
 
@@ -48,26 +49,6 @@ def multiply_answers(answers, number_of_times):   # Adds y value array to itself
         for i in range(0, (number_of_times - 1)):
             output = np.concatenate((output, answers))
     return output
-
-
-def mnist_transformer(images):    # Generates transformed mnist images at random
-    images_copy = np.array(images)
-    for i in images_copy:
-        for n in i:
-            background_num = random.uniform(0.65, 0.82)
-            background_varmax = random.uniform(0.0, 0.13)
-            letter_num = random.uniform(0.0, 0.1)
-            letter_varmax = random.uniform(0.0, 0.01)
-            for a in n:
-                for b in range(len(a)):
-                    if a[b] == 0.0:
-                        a[b] = background_num + random.uniform(0.0, background_varmax)
-                    else:
-                        a[b] = 1 - a[b]
-                        if a[b] + (letter_num + letter_varmax) >= background_num:
-                            a[b] = background_num - (letter_num + letter_varmax)
-                        a[b] = a[b] + (letter_num + random.uniform(0.0, letter_varmax))
-    return images_copy
 
 
 def preprocess_mnist(images):   # Normalizes mnist
@@ -103,16 +84,17 @@ y_testE = emnist['dataset'][0][0][1][0][0][1]
 # Prepocess and transform EMNIST data
 x_trainE = preprocess_emnist(x_trainE[0:10])
 x_testE = preprocess_emnist(x_testE[0:10])
-x_trainE = multiply_mnist(x_trainE, 2)
-x_testE = multiply_mnist(x_testE, 2)
-y_trainE = multiply_answers(y_trainE[0:10], 2)
-y_testE = multiply_answers(y_testE[0:10], 2)
+x_trainE = multiply_mnist(x_trainE, 1)
+x_testE = multiply_mnist(x_testE, 1)
+y_trainE = multiply_answers(y_trainE[0:10], 1)
+y_testE = multiply_answers(y_testE[0:10], 1)
 y_trainE = inflate_answers(y_trainE)
 y_testE = inflate_answers(y_testE)
 
 # Preprocess EMNIST class labels
 y_trainE = np_utils.to_categorical(y_trainE, 37)
 y_testE = np_utils.to_categorical(y_testE, 37)
+
 
 # Combine all training and test data
 x_train_combined = np.array(np.concatenate((X_train, x_trainE)))
@@ -132,7 +114,7 @@ print('x_test_combined shape: (%s, %s, %s, %s)'
       % (x_test_combined.shape[0], x_test_combined.shape[1],
          x_test_combined.shape[2], x_test_combined.shape[3])
       )
-print('y_train_combined shape: (%s, %s)'
+print('y_test_combined shape: (%s, %s)'
       % (y_test_combined.shape[0], y_test_combined.shape[1])
       )
 
