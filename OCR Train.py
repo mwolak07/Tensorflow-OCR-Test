@@ -151,7 +151,7 @@ callbacks_list = [
 
 # Fit model on training data
 history = model.fit(x_train_combined, y_train_combined,
-                    batch_size=32, epochs=150, verbose=1, callbacks=callbacks_list)
+                    batch_size=32, epochs=40, verbose=1, callbacks=callbacks_list)
 
 # Print history object's keys
 history_keys = str(history.history.keys())
