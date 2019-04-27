@@ -1,5 +1,9 @@
 import numpy as np
 from scipy import io as spio
+<<<<<<< HEAD
+=======
+from random import shuffle
+>>>>>>> 575a4b83d9eaf458dfa244f948f372c8796d44a3
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.datasets import mnist
@@ -92,6 +96,31 @@ def convert_to_result(confidences_list):   # Converts array of confidences to cl
             output.append('Blank')
     return output
 
+def preprocess_emnist(images):   # Normalizes emnist
+    images = np.array(images)
+    images = images.reshape(images.shape[0], 1, 28, 28)
+    make_it_right(images)
+    images = images.astype('float32')
+    images /= 255
+    return images
+
+
+def make_it_right(letters):   # Rotates 90 degrees and flips vertically, to orient emnist properly
+    output = letters
+    for i in output:
+        for n in range(len(i)):
+            i[n] = np.rot90(i[n])
+            i[n] = np.flipud(i[n])
+    return output
+
+
+def preprocess_mnist(images):   # Normalizes mnist
+    images = np.array(images)
+    images = images.reshape(images.shape[0], 1, 28, 28)
+    images = images.astype('float32')
+    images /= 255
+    return images
+
 
 def show_images(images):   # Shows test images
     for i in range(len(images)):
@@ -138,23 +167,26 @@ model.add(Dense(128, activation="relu"))
 model.add(Dropout(.5))
 model.add(Dense(37, activation="softmax"))
 
-# Load test images
-# Load pre-shuffled MNIST data into train and test sets
+# Define test images
+# Load pre-shuffled MNIST data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
 # Preprocess and transform MNIST data
-np.random.shuffle(X_test)
-mSet = preprocess_mnist(X_test[0:5])
+mSet = preprocess_mnist(X_test)
 
 # Load EMNIST data
 emnist = spio.loadmat('emnist-letters.mat')
-eSet = emnist['dataset'][0][0][0][0][0][0]
+eSet = emnist['dataset'][0][0][1][0][0][0]
+
+# Prepocess and transform EMNIST data
+eSet = preprocess_emnist(eSet)
+
+# Shuffle
+np.random.shuffle(mSet)
 np.random.shuffle(eSet)
-eSet = preprocess_emnist(eSet[0:5])
 
 # Combine all training and test data
-test_images = np.array(np.concatenate((mSet, eSet)))
-print(test_images.shape)
+images = np.array(np.concatenate((mSet[0:5], eSet[0:5])))
 
 # Compile the model
 model.compile(loss="categorical_crossentropy",
@@ -165,7 +197,7 @@ model.compile(loss="categorical_crossentropy",
 model.load_weights('OCR.h5', by_name=False)
 
 # Make predictions on test images
-p = model.predict(test_images, batch_size=test_images.shape[0], verbose=0)
+p = model.predict(images, batch_size=images.shape[0], verbose=0)
 print(p)
 print(convert_to_result(p))
-show_images(test_images)
+show_images(images)

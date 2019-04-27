@@ -63,12 +63,12 @@ def preprocess_mnist(images):   # Normalizes mnist
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
 # Preprocess and transform MNIST data
-X_train = preprocess_mnist(X_train[0:10])
-X_test = preprocess_mnist(X_test[0:10])
+X_train = preprocess_mnist(X_train)
+X_test = preprocess_mnist(X_test)
 X_train = multiply_mnist(X_train, 2)
 X_test = multiply_mnist(X_test, 2)
-y_train = multiply_answers(y_train[0:10], 2)
-y_test = multiply_answers(y_test[0:10], 2)
+y_train = multiply_answers(y_train, 2)
+y_test = multiply_answers(y_test, 2)
 
 # Preprocess MNIST class labels
 y_train = np_utils.to_categorical(y_train, 37)
@@ -82,12 +82,12 @@ y_trainE = emnist['dataset'][0][0][0][0][0][1]
 y_testE = emnist['dataset'][0][0][1][0][0][1]
 
 # Prepocess and transform EMNIST data
-x_trainE = preprocess_emnist(x_trainE[0:10])
-x_testE = preprocess_emnist(x_testE[0:10])
+x_trainE = preprocess_emnist(x_trainE)
+x_testE = preprocess_emnist(x_testE)
 x_trainE = multiply_mnist(x_trainE, 1)
 x_testE = multiply_mnist(x_testE, 1)
-y_trainE = multiply_answers(y_trainE[0:10], 1)
-y_testE = multiply_answers(y_testE[0:10], 1)
+y_trainE = multiply_answers(y_trainE, 1)
+y_testE = multiply_answers(y_testE, 1)
 y_trainE = inflate_answers(y_trainE)
 y_testE = inflate_answers(y_testE)
 
@@ -151,7 +151,7 @@ callbacks_list = [
 
 # Fit model on training data
 history = model.fit(x_train_combined, y_train_combined,
-                    batch_size=32, epochs=10, verbose=1, callbacks=callbacks_list)
+                    batch_size=32, epochs=40, verbose=1, callbacks=callbacks_list)
 
 # Print history object's keys
 history_keys = str(history.history.keys())
