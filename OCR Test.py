@@ -1,9 +1,6 @@
 import numpy as np
 from scipy import io as spio
-<<<<<<< HEAD
-=======
 from random import shuffle
->>>>>>> 575a4b83d9eaf458dfa244f948f372c8796d44a3
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.datasets import mnist
