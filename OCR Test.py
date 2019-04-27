@@ -1,6 +1,8 @@
 import numpy as np
+from scipy import io as spio
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
+from keras.datasets import mnist
 from matplotlib import pyplot as plt
 import cv2
 
@@ -98,14 +100,30 @@ def show_images(images):   # Shows test images
     return None
 
 
-def preprocess_images(images):   # Adjusts size of input images to match model input
-    for i in range(len(images)):
-        images[i] = cv2.resize(images[i], (28, 28))
-        images[i] = np.array(images[i])
-        images[i] = images[i].reshape(1, 28, 28)
-        images[i] = images[i].astype('float32')
-        images[i] = images[i] / 255
-    return np.array(images)
+def preprocess_emnist(images):   # Normalizes emnist
+    images = np.array(images)
+    images = images.reshape(images.shape[0], 1, 28, 28)
+    make_it_right(images)
+    images = images.astype('float32')
+    images /= 255
+    return images
+
+
+def make_it_right(letters):   # Rotates 90 degrees and flips vertically, to orient emnist properly
+    output = letters
+    for i in output:
+        for n in range(len(i)):
+            i[n] = np.rot90(i[n])
+            i[n] = np.flipud(i[n])
+    return output
+
+
+def preprocess_mnist(images):   # Normalizes mnist
+    images = np.array(images)
+    images = images.reshape(images.shape[0], 1, 28, 28)
+    images = images.astype('float32')
+    images /= 255
+    return images
 
 
 # Defining model architecture
@@ -121,14 +139,21 @@ model.add(Dropout(.5))
 model.add(Dense(37, activation="softmax"))
 
 # Load test images
-image1 = cv2.imread("images/0A.png", flags=cv2.IMREAD_GRAYSCALE)
-image2 = cv2.imread("images/1A.png", flags=cv2.IMREAD_GRAYSCALE)
-image3 = cv2.imread("images/2A.png", flags=cv2.IMREAD_GRAYSCALE)
-image4 = cv2.imread("images/3A.png", flags=cv2.IMREAD_GRAYSCALE)
-image5 = cv2.imread("images/4A.png", flags=cv2.IMREAD_GRAYSCALE)
-image6 = cv2.imread("images/blank.png", flags=cv2.IMREAD_GRAYSCALE)
-test_images = [image1, image2, image3, image4, image5]
-test_images = preprocess_images(test_images)
+# Load pre-shuffled MNIST data into train and test sets
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+# Preprocess and transform MNIST data
+np.random.shuffle(X_test)
+mSet = preprocess_mnist(X_test[0:5])
+
+# Load EMNIST data
+emnist = spio.loadmat('emnist-letters.mat')
+eSet = emnist['dataset'][0][0][0][0][0][0]
+np.random.shuffle(eSet)
+eSet = preprocess_emnist(eSet[0:5])
+
+# Combine all training and test data
+test_images = np.array(np.concatenate((mSet, eSet)))
 print(test_images.shape)
 
 # Compile the model
