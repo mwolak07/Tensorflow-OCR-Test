@@ -1,8 +1,10 @@
-Test of OCR on MNIST and EMNIST dataset to familiarize self with tensorflow and deep learning
+# Tensorflow OCR Test
+
+Overview: Test of OCR on MNIST and EMNIST dataset to familiarize myself with tensorflow and deep learning.
 
 Description
-	- Basic OCR with CNN on EMNIST and MNIST datasets as deep learning demo
-	- Currently trained on 40 epochs
+	- Basic OCR with CNN on EMNIST and MNIST datasets as deep learning demo.
+	- Currently trained on 40 epochs.
 
 Environment:
 	- Python 3.6
